@@ -310,6 +310,7 @@ unsigned int board_support_bcm_wifi(unsigned *p_gpio);
 char *get_compass_gs_position_name(void);
 char *get_sensors_list_name(void);
 char *get_wifi_device_name(void);
+char *get_baseband_version(void);
 char *get_lcd_panel_name(void);
 
 lcd_align_type get_lcd_align_type(void);

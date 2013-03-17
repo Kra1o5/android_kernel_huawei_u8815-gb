@@ -32,6 +32,11 @@ static __u32	frame_buffer_size = 0;
 static __u32	frame_buffer_start = 0;	/* physical start address */
 #endif
 
+#ifdef CONFIG_FRAMEBUF_SELF_ADAPT_HACK
+#define BL_BUF_BLOCK 1048576
+static bool frame_buffer_boosted = false;
+#endif
+
 /* cust size self adapter */
 static __u32	cust_buffer_size = 0;
 static __u32	cust_buffer_start = 0;	/* physical start address */
@@ -95,7 +100,15 @@ __tagtable(ATAG_CHARGE_FLAG, parse_tag_charge_flag);
 int __init parse_tag_frame_buffer(const struct tag *tags)
 {
 	frame_buffer_size = tags->u.mem.size;
-	frame_buffer_start = tags->u.mem.start;
+#ifdef CONFIG_FRAMEBUF_SELF_ADAPT_HACK
+    if(frame_buffer_size < 6 * BL_BUF_BLOCK)
+    {
+        frame_buffer_size += BL_BUF_BLOCK;
+        frame_buffer_boosted = true;
+    }
+#endif
+
+        frame_buffer_start = tags->u.mem.start;
 	
     printk(KERN_DEBUG "%s: fb addr= 0x%x, size=0x%0x\n", __func__, frame_buffer_start, frame_buffer_size);
     return 0;
@@ -163,6 +176,25 @@ char *get_wifi_device_name(void)
   }                                                  
   return wifi_device_id;                             
 } 
+
+
+char *get_baseband_version(void)
+{
+  char *baseband_version = NULL;
+#ifdef CONFIG_FRAMEBUF_SELF_ADAPT_HACK
+  if(frame_buffer_boosted)
+  {
+    baseband_version = "109808";
+  }
+  else
+  {
+#endif
+    baseband_version = "2030";
+#ifdef CONFIG_FRAMEBUF_SELF_ADAPT_HACK
+  }
+#endif
+  return baseband_version;
+}
 
 void get_audio_property(char *audio_property)
 {

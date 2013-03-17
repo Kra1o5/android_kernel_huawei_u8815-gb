@@ -283,6 +283,7 @@ static int app_version_read_proc(char *page, char **start, off_t off,
 	char *lcd_name = NULL;
 	char * touch_info = NULL;
 	char *wifi_device_name = NULL;
+	char *baseband_version = NULL;
 	char audio_property[AUDIO_PROPERTY_LEN] = {0};
 		charge_flag = get_charge_flag();
     set_s_board_hw_version(s_board_id,hw_version_id);
@@ -306,6 +307,7 @@ static int app_version_read_proc(char *page, char **start, off_t off,
 	    lcd_name = "UNKNOWN LCD";
 	}
 	wifi_device_name = get_wifi_device_name();
+	baseband_version = get_baseband_version();
 	get_audio_property(audio_property);
 	touch_info = get_touch_info();
 	if (touch_info == NULL)
@@ -330,11 +332,12 @@ static int app_version_read_proc(char *page, char **start, off_t off,
 	"FLASH_ID:\n%s\n"
 	"lcd_id:\n%s\n"
 	"wifi_chip:\n%s\n"
+	"baseband_version:\n%s\n"
 	"audio_property:\n%s\n"
-	"touch_info:\n%s\n",s_board_id, 
-	hw_version_id,charge_flag,compass_gs_name,
-	sensors_list_name,str_flash_nand_id,lcd_name,
-	wifi_device_name,audio_property,touch_info);
+	"touch_info:\n%s\n", s_board_id,  
+	hw_version_id,charge_flag, compass_gs_name, 
+	sensors_list_name, str_flash_nand_id, lcd_name, 
+	wifi_device_name, baseband_version, audio_property, touch_info);
 	return proc_calc_metrics(page, start, off, count, eof, len);
 }
 
